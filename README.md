@@ -20,29 +20,32 @@ unobtrusively integrated into any application or framework that supports
 Require the `passport-google-authcode` Strategy along with `passport`
 
 ```js
-var passport = require('passport');
-var GoogleAuthCodeStrategy = require('passport-google-authcode').Strategy;
+var passport = require("passport");
+var GoogleAuthCodeStrategy = require("passport-google-authcode").Strategy;
 ```
 
 #### Configure Strategy
 
 The Google authentication strategy authenticates users using a Google
-account and OAuth 2.0 tokens.  The strategy requires a `verify` callback, which
+account and OAuth 2.0 tokens. The strategy requires a `verify` callback, which
 accepts these credentials and calls `done` providing a user, as well as
 `options` specifying a app ID and app secret.
 
 ```js
-passport.use(new GoogleAuthCodeStrategy({
-    clientID: GOOGLE_CLIENT_ID,
-    clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://yourdomain:3000/auth/google/callback"
-  },
-  function(accessToken, refreshToken, profile, done) {
-    User.findOrCreate({ googleId: profile.id }, function (err, user) {
-      return done(err, user);
-    });
-  }
-));
+passport.use(
+  new GoogleAuthCodeStrategy(
+    {
+      clientID: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_CLIENT_SECRET,
+      callbackURL: "http://yourdomain:3000/auth/google/callback",
+    },
+    function (accessToken, refreshToken, profile, results, done) {
+      User.findOrCreate({ googleId: profile.id }, function (err, user) {
+        return done(err, user);
+      });
+    }
+  )
+);
 ```
 
 Please note that even though in some cases `callbackURL` may not be needed, but Google's API expects a non-null value for this. If it is not set, you'll get back an error response. Setting it to any non-null value should solve it. More information [here](https://github.com/shobhitsinghal624/passport-google-authcode/issues/9#issuecomment-501581395).
@@ -52,11 +55,12 @@ Please note that even though in some cases `callbackURL` may not be needed, but 
 Use `passport.authenticate()`, specifying the `'google-authcode'` strategy, to authenticate requests.
 
 ```js
-app.post('/auth/google/authcode',
-  passport.authenticate('google-authcode'),
+app.post(
+  "/auth/google/authcode",
+  passport.authenticate("google-authcode"),
   function (req, res) {
     // do something with req.user
-    res.send(req.user? 200 : 401);
+    res.send(req.user ? 200 : 401);
   }
 );
 ```
@@ -65,11 +69,11 @@ The post request to this route should include a JSON object with the key `code` 
 
 ## Credits
 
-  - [Shobhit Singhal](https://github.com/shobhitsinghal624)
-  - [Jared Hanson](https://github.com/jaredhanson)
-  - [Ethan Langevin](https://github.com/ejlangev)
-  - [Maxim Yaskevich](https://github.com/myaskevich)
-  - [Thibault](https://github.com/melkir)
+- [Shobhit Singhal](https://github.com/shobhitsinghal624)
+- [Jared Hanson](https://github.com/jaredhanson)
+- [Ethan Langevin](https://github.com/ejlangev)
+- [Maxim Yaskevich](https://github.com/myaskevich)
+- [Thibault](https://github.com/melkir)
 
 ## License
 
